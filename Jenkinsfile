@@ -22,8 +22,17 @@ pipeline {
                 sh 'docker build -t springboot-demo:latest .'
             }
         }
-
-        stage('Run') {
+stage('Docker Push') {
+    steps {
+        withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+            sh '''
+            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+            docker tag springboot-demo:latest ganeshvmblr/springboot-cicd:latest
+            docker push ganeshvmblr/springboot-cicd:latest
+            '''
+        }
+    }
+}        stage('Run') {
             steps {
                 sh '''
                 docker rm -f springboot-demo || true
