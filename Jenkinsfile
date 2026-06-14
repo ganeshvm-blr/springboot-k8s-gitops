@@ -12,7 +12,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    sh './mvnw clean verify sonar:sonar -DskipTests'
+                    sh 'mvn clean verify sonar:sonar -DskipTests'
                 }
             }
         }
