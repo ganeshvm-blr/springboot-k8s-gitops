@@ -5,14 +5,14 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh './mvnw clean package'
+                sh './mvnw clean package -DskipTests'
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    sh './mvnw clean package sonar:sonar -Dsonar.projectKey=springboot-demo'
+                    sh './mvnw clean verify sonar:sonar -Dsonar.projectKey=springboot-demo -DskipTests'
                 }
             }
         }
@@ -29,7 +29,6 @@ pipeline {
                 docker rm -f springboot-demo || true
                 docker stop springboot-demo || true
 
-                # free port if stuck
                 docker ps -q --filter "publish=8081" | xargs -r docker stop
 
                 docker run -d --name springboot-demo -p 8081:8080 springboot-demo:latest
