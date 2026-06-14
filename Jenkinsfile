@@ -5,14 +5,14 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh './mvnw clean package -DskipTests'
+                sh './mvnw clean package'
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    sh './mvnw clean verify sonar:sonar -Dsonar.projectKey=springboot-demo'
+                    sh './mvnw clean package sonar:sonar -Dsonar.projectKey=springboot-demo'
                 }
             }
         }
